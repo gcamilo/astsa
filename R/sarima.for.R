@@ -1,6 +1,6 @@
 sarima.for <-
 function(xdata,n.ahead,p,d,q,P=0,D=0,Q=0,S=-1,tol=sqrt(.Machine$double.eps),no.constant=FALSE, plot.all=FALSE,
-         xreg = NULL, newxreg = NULL){ 
+         xreg = NULL, newxreg = NULL,remove.plots=FALSE){ 
    #
    layout = graphics::layout
    par = graphics::par
@@ -43,31 +43,34 @@ if (is.null(xreg)) {
 #--
  fore <- stats::predict(fitit, n.ahead, newxreg=nureg)  
 #-- graph:
-  U  = fore$pred + 2*fore$se
-  L  = fore$pred - 2*fore$se
-  U1 = fore$pred + fore$se
-  L1 = fore$pred - fore$se
-   if(plot.all)  {a=1} else  {a=max(1,n-100)}
-  minx=min(xdata[a:n],L)
-  maxx=max(xdata[a:n],U)
-   t1=xy.coords(xdata, y = NULL)$x 
-   if(length(t1)<101) strt=t1[1] else strt=t1[length(t1)-100]
-   t2=xy.coords(fore$pred, y = NULL)$x 
-   endd=t2[length(t2)]
-   if(plot.all)  {strt=time(xdata)[1]} 
-   xllim=c(strt,endd)
-  par(mar=c(2.5, 2.5, 1, 1), mgp=c(1.6,.6,0))
-  ts.plot(xdata,fore$pred, type="n", xlim=xllim, ylim=c(minx,maxx), ylab=xname) 
-  grid(lty=1, col=gray(.9)); box()
-  if(plot.all) {lines(xdata)} else {lines(xdata, type='o')}   
-#  
-   xx = c(time(U), rev(time(U)))
-   yy = c(L, rev(U))
-   polygon(xx, yy, border=8, col=gray(.6, alpha=.2) ) 
-   yy1 = c(L1, rev(U1))
-   polygon(xx, yy1, border=8, col=gray(.6, alpha=.2) ) 
+ if(!remove.plots){
    
-   lines(fore$pred, col="red", type="o")
+    U  = fore$pred + 2*fore$se
+    L  = fore$pred - 2*fore$se
+    U1 = fore$pred + fore$se
+    L1 = fore$pred - fore$se
+     if(plot.all)  {a=1} else  {a=max(1,n-100)}
+    minx=min(xdata[a:n],L)
+    maxx=max(xdata[a:n],U)
+     t1=xy.coords(xdata, y = NULL)$x 
+     if(length(t1)<101) strt=t1[1] else strt=t1[length(t1)-100]
+     t2=xy.coords(fore$pred, y = NULL)$x 
+     endd=t2[length(t2)]
+     if(plot.all)  {strt=time(xdata)[1]} 
+     xllim=c(strt,endd)
+    par(mar=c(2.5, 2.5, 1, 1), mgp=c(1.6,.6,0))
+    ts.plot(xdata,fore$pred, type="n", xlim=xllim, ylim=c(minx,maxx), ylab=xname) 
+    grid(lty=1, col=gray(.9)); box()
+    if(plot.all) {lines(xdata)} else {lines(xdata, type='o')}   
+  #  
+     xx = c(time(U), rev(time(U)))
+     yy = c(L, rev(U))
+     polygon(xx, yy, border=8, col=gray(.6, alpha=.2) ) 
+     yy1 = c(L1, rev(U1))
+     polygon(xx, yy1, border=8, col=gray(.6, alpha=.2) ) 
+     
+     lines(fore$pred, col="red", type="o")
+ }
   return(fore)
 }
 
