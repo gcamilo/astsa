@@ -42,9 +42,10 @@ if (is.null(xreg)) {
   
 #--
  fore <- stats::predict(fitit, n.ahead, newxreg=nureg)
- fore$ar_coef   <- fitit$fit$coef[1]
- fore$mean_coef <- fitit$fit$coef[2]
- fore$se2_ar    <- fitit$fit$sigma2
+ fore[["ar_coef"]]   <- fitit$fit$coef[1]
+ fore[["mean_coef"]] <- fitit$fit$coef[2]
+ fore[["se2_ar"]]    <- fitit$fit$sigma2
+ 
 #-- graph:
  if(!remove.plots){
    
